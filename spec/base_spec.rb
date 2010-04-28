@@ -123,5 +123,31 @@ describe "Cinch::Base" do
       rule[-1].chr.should == "$"
     end
   end
+
+  describe "#stop" do
+    before do
+      @mock_irc = mock Object
+      @base.instance_variable_set("@irc", @mock_irc)
+    end
+
+    it "should stop with a default message" do
+      @mock_irc.should_receive(:quit).with("Shutting Down")
+      stop_ruby_exiting
+
+      @base.stop
+    end
+
+    it "should stop with a custom message" do
+      @mock_irc.should_receive(:quit).with("Bye bye!")
+      stop_ruby_exiting
+
+      @base.stop "Bye bye!"
+    end
+
+    # Hack to stop ruby actually exiting when "exit" is called
+    def stop_ruby_exiting
+      @base.should_receive(:exit).and_return(true)
+    end
+  end
 end
 

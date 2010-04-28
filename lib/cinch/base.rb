@@ -254,6 +254,12 @@ module Cinch
       end
     end
 
+    def stop msg="Shutting Down"
+      @irc.quit msg
+      puts "\nExiting"
+      exit
+    end
+
     # Process the next line read from the server
     def process(line)
       return unless line
