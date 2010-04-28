@@ -36,11 +36,12 @@ end
 desc "Package"
 task :package => [:clean] do |p|
   sh "gem build #{NAME}.gemspec"
+  sh "mv #{NAME}-#{VERSION}.gem pkg/"
 end
 
 desc "Install gem"
 task :install => [:package] do
-  sh "sudo gem install ./#{NAME}-#{VERSION} --local"
+  sh "sudo gem install ./pkg/#{NAME}-#{VERSION} --local"
 end
 
 desc "Uninstall gem"
@@ -50,7 +51,7 @@ end
 
 desc "Upload gem to gemcutter"
 task :release => [:package] do
-  sh "gem push ./#{NAME}-#{VERSION}.gem"
+  sh "gem push ./pkg/#{NAME}-#{VERSION}.gem"
 end
 
 desc "Run all specs"
@@ -58,5 +59,11 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = Dir['spec/**/*_spec.rb']
 end
 
+desc "Tidies up pre-built gems"
+task :clean_gem do
+  sh "rm -r pkg/#{NAME}-#{VERSION}.gem || true"
+end
+
+task :clean => :clean_gem
 task :default => [:clean, :spec]
 
