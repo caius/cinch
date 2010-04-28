@@ -6,8 +6,19 @@ require "spec/rake/spectask"
 
 require 'lib/cinch'
 
+# fixme: put this elsewhere
+def silently &block
+  warn_level = $VERBOSE
+  $VERBOSE = nil
+  result = block[]
+  $VERBOSE = warn_level
+  result
+end
+
 NAME = 'cinch'
-VERSION = Cinch::VERSION
+# VERSION contains the ruby version, overriding this probably isn't the best idea.
+# Let's at least do it silently.
+silently { VERSION = Cinch::VERSION }
 TITLE = "Cinch: The IRC Bot Building Framework"
 CLEAN.include ["*.gem", "rdoc"]
 RDOC_OPTS = [
